@@ -1,17 +1,20 @@
+### v13
+Add Slot switch detection
+
 ### v12
-支持 Xperia Pro
+Support for Xperia Pro
 
 ### v11
-修复了一处卸载时可能残留的bug
+Fixed a potential bug where remnants could remain after uninstallation
 
 ### v10
-支持更多硬件版本
+Support for more hardware versions
 
 ### v9
-修复因 Android 10 没有 system_ext 导致的修改不完全
+Fixed incomplete modifications caused by lack of system_ext on Android 10
 
 ### v8
-修复无法使用电池电量功能
+Fixed issue preventing battery level functionality
 
 ### v7
-修复特定情况下电量异常的错误
+Fixed battery anomaly errors in certain situations

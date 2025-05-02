@@ -1,57 +1,57 @@
-# 安装时创建
+# Create during installation
 DIRPATH=/data/adb/mark2_4500
 
-# 设置路径
+# Set paths
 MODBINPATH=$DIRPATH/bin
 MODDTBOPATH=$DIRPATH/dtbo
 
-# 获取当前插槽
+# Get current slot
 SLOT=$(getprop ro.boot.slot_suffix)
 
-if [ "$SLOT" != "_a" ] && [ $SLOT != "_b" ]; then
-  echo "未获取到正确插槽"
+if [ "$SLOT" != "_a" ] && [ "$SLOT" != "_b" ]; then
+  echo "Failed to retrieve a valid slot"
   exit 1
 else
-  # 提取dtbo.img
+  # Extract dtbo.img
   dd if=/dev/block/by-name/dtbo$SLOT of=$MODDTBOPATH/dtbo.img &> /dev/null
 fi
 
 if [ $? != 0 ]; then
-  echo "未能提取到dtbo.img"
+  echo "Failed to extract dtbo.img"
   exit 1
 fi
 
-# 提取dtbo.dtbo
+# Extract dtbo.dtbo
 $MODBINPATH/mkdtimg dump $MODDTBOPATH/dtbo.img -b $MODDTBOPATH/dtbo.dtbo -o /dev/null
 
-# 获取机型信息
+# Retrieve device model information
 MODEL=$($MODBINPATH/fdtget $MODDTBOPATH/dtbo.dtbo.0 / model)
 
 if [[ "$MODEL" =~ "PDX-203" ]]; then
-  echo "当前机型为Xperia 1 II"
+  echo "Detected device: Xperia 1 II"
   $MODBINPATH/fdtoverlay -i $MODDTBOPATH/dtbo.dtbo.0 -o $MODDTBOPATH/new_dtbo.dtbo $MODDTBOPATH/origin_pdx203.dtbo
 elif [[ "$MODEL" =~ "PDX-204" ]]; then
-  echo "当前机型为Xperia Pro"
+  echo "Detected device: Xperia Pro"
   $MODBINPATH/fdtoverlay -i $MODDTBOPATH/dtbo.dtbo.0 -o $MODDTBOPATH/new_dtbo.dtbo $MODDTBOPATH/origin_pdx203.dtbo
 elif [[ "$MODEL" =~ "PDX-206" ]]; then
-  echo "当前机型为Xperia 5 II"
+  echo "Detected device: Xperia 5 II"
   $MODBINPATH/fdtoverlay -i $MODDTBOPATH/dtbo.dtbo.0 -o $MODDTBOPATH/new_dtbo.dtbo $MODDTBOPATH/origin_pdx206.dtbo
 else
-  echo "不支持此机型"
+  echo "Unsupported device model"
   exit 1
 fi
 
-# 生成new_dtbo.img
+# Generate new_dtbo.img
 $MODBINPATH/mkdtimg create $MODDTBOPATH/new_dtbo.img --page_size=4096 $MODDTBOPATH/new_dtbo.dtbo &> /dev/null
 
-# 刷入dtbo
+# Flash dtbo
 dd if=$MODDTBOPATH/new_dtbo.img of=/dev/block/by-name/dtbo$SLOT &> /dev/null
 
 if [ $? != 0 ]; then
-  echo "未能还原dtbo.img"
+  echo "Failed to restore dtbo.img"
   exit 1
 fi
 
 echo "bye"
-# 清理残留
+# Clean up leftovers
 rm -rf $DIRPATH
