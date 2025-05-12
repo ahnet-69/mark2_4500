@@ -1,3 +1,6 @@
+### v14
+Fix Slot switch logic
+
 ### v13
 Add Slot switch detection
 

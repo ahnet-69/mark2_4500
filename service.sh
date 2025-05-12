@@ -6,14 +6,16 @@ MODPATH="/data/adb/modules/mark2_4500"
 MODBINPATH=$STATE_DIR/bin
 MODDTBOPATH=$STATE_DIR/dtbo
 
-# Grant execution permissions
-chmod +x $MODBINPATH/*
-
-# For uninstallation
-cp -rf $MODBINPATH $MODDTBOPATH $DIRPATH
-
 mkdir -p "$STATE_DIR"
+mkdir -p "$MODDTBOPATH"
 chmod 0700 "$STATE_DIR"
+
+# Re-copy dirs if deleted
+cp -f $MODPATH/dtbo/*.dtbo $MODDTBOPATH
+if [ ! -d "$MODBINPATH" ]; then
+  cp -rf $MODPATH/bin $MODBINPATH
+  chmod +x $MODBINPATH/*
+fi
 
 # Current slot
 CUR_SLOT=$(getprop ro.boot.slot_suffix)
@@ -26,6 +28,11 @@ fi
 # Check if last slot exists
 if [ -f "$STATE_FILE" ]; then
   LAST_SLOT=$(head -n1 "$STATE_FILE")
+  if [ "$LAST_SLOT" != "_a" ] && [ $LAST_SLOT != "_b" ]; then
+     echo "$CUR_SLOT" > "$STATE_FILE"
+     chmod 0600 "$STATE_FILE"
+     LAST_SLOT="$CUR_SLOT"
+  fi
 else
   echo "$CUR_SLOT" > "$STATE_FILE"
   chmod 0600 "$STATE_FILE"
@@ -77,8 +84,7 @@ if [ "$CUR_SLOT" != "$LAST_SLOT" ]; then
   log -p i -t mark2_4500 "Patching DTBO successful"
 
   # Remove these files - No longer needed
-  rm -rf $MODBINPATH
-  rm -rf $MODDTBOPATH
+  rm -rf $MODDTBOPATH/dtbo $MODDTBOPATH/dtbo.dtbo.0 $MODDTBOPATH/*.img $MODDTBOPATH/new_dtbo.dtbo
 else
   sed -i 's/^description=.*/description=✅ DTBO Patched Already, No Actions taken/' $MODPATH/module.prop
 fi
