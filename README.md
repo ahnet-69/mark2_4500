@@ -1,7 +1,7 @@
 # mark2_4500
 Expansion module for Xperia II series after replacing with third-generation battery
 
-Translated to English with auto slot detection.
+Translated to English.
 <br />
 ## This module does not make the battery last longer — do not flash it recklessly for that reason
 <br />
