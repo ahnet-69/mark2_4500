@@ -1,7 +1,7 @@
 id=mark2_4500
 name=Xperia II Battery 4500 mAh
-version=v14-mod
-versionCode=14
+version=v14.1-mod
+versionCode=14.1
 author=lzghzr,Ahnet
 description=For Xperia 1 II, Xperia 5 II, and Xperia Pro with a replaced third-generation battery, unlock the battery capacity to 4500 mAh. (modded for slot switch detection + English lang)
 updateJson=https://github.com/ahnet-69/mark2_4500/raw/main/update.json

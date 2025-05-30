@@ -19,6 +19,8 @@ DIRPATH=/data/adb/mark2_4500
 # Display warning message
 warning
 
+mkdir $DIRPATH
+
 # Set paths
 MODBINPATH=$MODPATH/bin
 MODDTBOPATH=$MODPATH/dtbo
